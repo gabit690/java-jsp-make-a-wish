@@ -21,7 +21,6 @@
     <h1 class="text-light text-center fw-bolder pt-2">Make a wish<span style='font-size:30px;'>&#127776;</span></h1>
     <main>
         <%
-
             String colorMessage = null;
 
             OperationResult operationType = OperationResult.CREATED;
@@ -47,6 +46,7 @@
         </div>
         <p class="text-center text-light">You can <a href="wishes.jsp" target="_self" rel="noopener noreferrer">go to the wishes' list</a> or <a href="index.jsp" target="_self" rel="noopener noreferrer">add another wish</a></p>
     </main>
+    <p class="text-danger">[ TYPE ]</p>
     <jsp:include page="copyright.jsp"></jsp:include>
 </body>
 </html>

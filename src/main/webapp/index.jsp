@@ -15,12 +15,15 @@
 <body class="bg-dark position-relative" style="height: 100vh">
     <h1 class="text-light text-center fw-bolder pt-2">Make a wish<span style='font-size:30px;'>&#127776;</span></h1>
     <main>
-        <form class="py-2 mx-auto" style="width: 320px">
+        <form class="py-2 mx-auto" style="width: 320px" method="post" action="ServletDatabase">
             <div class="mb-3">
-                <input type="text" id="usernameInput" class="form-control" placeholder="username"/>
+                <input type="text" id="usernameInput" class="form-control" placeholder="username" name="username"/>
             </div>
             <div class="mb-3">
-                <textarea class="form-control" placeholder="Leave your wish here" id="wishInput"></textarea>
+                <input type="text" id="titleInput" class="form-control" placeholder="title" name="title"/>
+            </div>
+            <div class="mb-3">
+                <textarea class="form-control" placeholder="Leave your wish here" id="wishInput" name="content"></textarea>
             </div>
             <input type="submit" class="btn btn-outline-primary d-block mx-auto" value="Send">
         </form>
