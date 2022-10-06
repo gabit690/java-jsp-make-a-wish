@@ -23,8 +23,8 @@
         <%
             String colorMessage = null;
 
-            OperationResult operationType = OperationResult.CREATED;
-            String operationMessage = "Your wish was added correctly!";
+            OperationResult operationType = (OperationResult) request.getAttribute("operationType");
+            String operationMessage = (String) request.getAttribute("operationMessage");
 
             switch (operationType) {
                 case CREATED:
@@ -46,7 +46,6 @@
         </div>
         <p class="text-center text-light">You can <a href="wishes.jsp" target="_self" rel="noopener noreferrer">go to the wishes' list</a> or <a href="index.jsp" target="_self" rel="noopener noreferrer">add another wish</a></p>
     </main>
-    <p class="text-danger">[ TYPE ]</p>
     <jsp:include page="copyright.jsp"></jsp:include>
 </body>
 </html>

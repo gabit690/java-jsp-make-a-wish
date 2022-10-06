@@ -1,5 +1,8 @@
 package com.gabit.dev.makeawish.controllers;
 
+import com.gabit.dev.makeawish.models.OperationResult;
+import com.gabit.dev.makeawish.models.Wish;
+import com.gabit.dev.makeawish.models.WishRepository;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -8,15 +11,18 @@ import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 
 @WebServlet(name = "ServletDatabase", value = "/ServletDatabase")
 public class ServletDatabase extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
+
+    private WishRepository repository;
+
+    public ServletDatabase() {
+        this.repository = new WishRepository();
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -47,18 +53,27 @@ public class ServletDatabase extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Data from database
+    protected void doPost(HttpServletRequest request, HttpServletResponse response){
 
-//        PrintWriter output = response.getWriter();
-//
-//        output.println("Name: " + request.getParameter("name"));
-//        String[] names = {"a", "b", "c"};
-//
-//        request.setAttribute("users", names);
-//
-//        RequestDispatcher myDispatcher = request.getRequestDispatcher("/requestResult.jsp");
-//
-//        myDispatcher.forward(request, response);
+        // Get info from Form
+        String username = request.getParameter("username");
+        String title = request.getParameter("title");
+        String content = request.getParameter("content");
+
+        // Save on Database
+
+        Wish newWish = new Wish(username, title, content);
+        this.repository.create(newWish);
+
+        // Redirect response to JSP
+        request.setAttribute("operationType", OperationResult.CREATED);
+        request.setAttribute("operationMessage", "Your wish was " + OperationResult.CREATED + " correctly!");
+        try {
+            request.getRequestDispatcher("requestResult.jsp").forward(request, response);
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

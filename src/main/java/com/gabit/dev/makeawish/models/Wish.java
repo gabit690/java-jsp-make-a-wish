@@ -23,7 +23,7 @@ public class Wish {
         this.deleted = deleted;
     }
 
-    public Wish(String username, String title, String content, int score, boolean deleted) {
+    public Wish(String username, String title, String content) {
         this.username = username;
         this.title = title;
         this.content = content;
