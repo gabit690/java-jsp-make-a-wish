@@ -1,7 +1,6 @@
 package com.gabit.dev.makeawish.models;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,7 +11,11 @@ public class WishRepository {
     public WishRepository() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            this.myConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/jee", "root", "");
+            this.myConnection = DriverManager.getConnection(
+                    "jdbc:mysql://us-east.connect.psdb.cloud/makeawish?sslMode=VERIFY_IDENTITY",
+                    "zkmo32pyk0sbwfb0hdnk",
+                    "pscale_pw_A8knPUS7QPbJngTrtnWdgPZoKCQZ0wF6dv52DmAOl4S"
+            );
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -25,19 +28,17 @@ public class WishRepository {
             myStatement.setString(2, wish.getTitle());
             myStatement.setString(3, wish.getContent());
             myStatement.executeUpdate();
+            myStatement.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public List<Wish> getAllWishes() {
-
         List<Wish> wishes = new LinkedList<>();
-
         try {
             Statement myStatement = this.myConnection.createStatement();
-            ResultSet myResult = myStatement.executeQuery("SELECT * FROM wishes ORDER BY score DESC");
-
+            ResultSet myResult = myStatement.executeQuery("SELECT * FROM wishes WHERE deleted = false ORDER BY score DESC");
             while (myResult.next()) {
                 Wish wishSaved = new Wish(
                         myResult.getInt(1),
@@ -48,8 +49,8 @@ public class WishRepository {
                         myResult.getBoolean(6));
                 wishes.add(wishSaved);
             }
-
             myResult.close();
+            myStatement.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -61,6 +62,7 @@ public class WishRepository {
             PreparedStatement myStatement = this.myConnection.prepareStatement("UPDATE wishes SET score = score + 1 WHERE id = ?");
             myStatement.setInt(1, id);
             myStatement.executeUpdate();
+            myStatement.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -68,9 +70,10 @@ public class WishRepository {
 
     public void delete(int id) {
         try {
-            PreparedStatement myStatement = this.myConnection.prepareStatement("DELETE FROM wishes WHERE id = ?");
+            PreparedStatement myStatement = this.myConnection.prepareStatement("UPDATE wishes SET deleted = true WHERE id = ?");
             myStatement.setInt(1, id);
             myStatement.executeUpdate();
+            myStatement.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

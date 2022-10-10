@@ -3,10 +3,8 @@ package com.gabit.dev.makeawish.controllers;
 import com.gabit.dev.makeawish.models.OperationResult;
 import com.gabit.dev.makeawish.models.Wish;
 import com.gabit.dev.makeawish.models.WishRepository;
-import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
-
 import java.io.IOException;
 import java.util.List;
 
@@ -23,10 +21,7 @@ public class ServletDatabase extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
-
         String operation = request.getParameter("operation");
-        System.out.println(request.getParameter("operation"));
-
         if (operation == null) {
             this.showWishes(request, response);
         } else {
@@ -40,14 +35,12 @@ public class ServletDatabase extends HttpServlet {
                 session.setAttribute("operationType", OperationResult.DELETED);
                 session.setAttribute("operationMessage", "Your wish was " + OperationResult.DELETED + " correctly!");
             }
-
             try {
                 response.sendRedirect("/requestResult.jsp");
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
-
     }
 
     private void showWishes(HttpServletRequest request, HttpServletResponse response) {
@@ -83,7 +76,6 @@ public class ServletDatabase extends HttpServlet {
         session.setAttribute("operationType", OperationResult.CREATED);
         session.setAttribute("operationMessage", "Your wish was " + OperationResult.CREATED + " correctly!");
         try {
-            //request.getRequestDispatcher("/requestResult.jsp").forward(request, response);
             response.sendRedirect("/requestResult.jsp");
         } catch (IOException e) {
             throw new RuntimeException(e);
