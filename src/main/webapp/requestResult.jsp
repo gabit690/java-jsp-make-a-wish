@@ -23,8 +23,8 @@
         <%
             String colorMessage = null;
 
-            OperationResult operationType = (OperationResult) request.getAttribute("operationType");
-            String operationMessage = (String) request.getAttribute("operationMessage");
+            OperationResult operationType = (OperationResult) session.getAttribute("operationType");
+            String operationMessage = (String) session.getAttribute("operationMessage");
 
             switch (operationType) {
                 case CREATED:
@@ -34,7 +34,7 @@
                     colorMessage = "info";
                     break;
                 case DELETED:
-                    colorMessage = "red";
+                    colorMessage = "danger";
                     break;
                 default:
                     break;
@@ -42,9 +42,9 @@
         %>
         <div class="alert alert-<%= colorMessage %> text-center w-50 mx-auto my-5" role="alert">
             <h4 class="alert-heading">Well done!</h4>
-            <p><%= operationMessage %></p>
+            <p class="mb-0"><%= operationMessage %></p>
         </div>
-        <p class="text-center text-light">You can <a href="wishes.jsp" target="_self" rel="noopener noreferrer">go to the wishes' list</a> or <a href="index.jsp" target="_self" rel="noopener noreferrer">add another wish</a></p>
+        <p class="text-center text-light">You can <a href="ServletDatabase" target="_self" rel="noopener noreferrer">go to the wishes' list</a> or <a href="index.jsp" target="_self" rel="noopener noreferrer">add another wish</a></p>
     </main>
     <jsp:include page="copyright.jsp"></jsp:include>
 </body>

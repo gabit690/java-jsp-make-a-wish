@@ -2,7 +2,7 @@ package com.gabit.dev.makeawish.models;
 
 public class Wish {
 
-    private Long id;
+    private int id;
 
     private String username;
 
@@ -14,7 +14,7 @@ public class Wish {
 
     private boolean deleted;
 
-    public Wish(Long id, String username, String title, String content, int score, boolean deleted) {
+    public Wish(int id, String username, String title, String content, int score, boolean deleted) {
         this.id = id;
         this.username = username;
         this.title = title;
@@ -29,11 +29,11 @@ public class Wish {
         this.content = content;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

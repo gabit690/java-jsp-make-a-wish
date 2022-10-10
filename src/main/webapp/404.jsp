@@ -17,7 +17,7 @@
   <main>
     <p class="text-center"><span style='font-size:200px;'>&#129301;</span></p>
     <p class="text-center text-uppercase text-light fs-3 mb-4">page not found</p>
-    <button class="btn btn-outline-primary d-block mx-auto">Go home</button>
+    <a href="index.jsp" target="_self" rel="noreferrer noopener" class="btn btn-primary d-block mx-auto" style="width: 200px">Go home</a>
   </main>
   <jsp:include page="copyright.jsp"></jsp:include>
 </body>

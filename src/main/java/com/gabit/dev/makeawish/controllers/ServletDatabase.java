@@ -7,11 +7,8 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
-import javax.annotation.Resource;
-import javax.sql.DataSource;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.*;
+import java.util.List;
 
 @WebServlet(name = "ServletDatabase", value = "/ServletDatabase")
 public class ServletDatabase extends HttpServlet {
@@ -25,35 +22,52 @@ public class ServletDatabase extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        PrintWriter output = response.getWriter();
-//        response.setContentType("text/plain");
-//
-//        ResultSet myResult = null;
-//        try {
-//
-//            Class.forName("com.mysql.cj.jdbc.Driver");
-//
-//            Connection myConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/jee", "root", "");
-//            Statement myStatement = myConnection.createStatement();
-//            String query = "SELECT * FROM wishes";
-//            myResult = myStatement.executeQuery(query);
-//
-//            while (myResult.next()) {
-//                //String title = myResult.getString(2);
-//                output.println(myResult);
-//            }
-//
-//            myResult.close();
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
 
+        String operation = request.getParameter("operation");
+        System.out.println(request.getParameter("operation"));
+
+        if (operation == null) {
+            this.showWishes(request, response);
+        } else {
+            HttpSession session = request.getSession();
+            if (operation.equals("update")) {
+                this.repository.incrementScore((Integer.parseInt(request.getParameter("id"))));
+                session.setAttribute("operationType", OperationResult.UPDATED);
+                session.setAttribute("operationMessage", "Your wish was " + OperationResult.UPDATED + " correctly!");
+            } else {
+                this.repository.delete((Integer.parseInt(request.getParameter("id"))));
+                session.setAttribute("operationType", OperationResult.DELETED);
+                session.setAttribute("operationMessage", "Your wish was " + OperationResult.DELETED + " correctly!");
+            }
+
+            try {
+                response.sendRedirect("/requestResult.jsp");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+    }
+
+    private void showWishes(HttpServletRequest request, HttpServletResponse response) {
+        List<Wish> wishes = this.repository.getAllWishes();
+        response.setContentType("text/jsp");
+        HttpSession session = request.getSession();
+        session.setAttribute("wishes", wishes);
+        try {
+            response.sendRedirect("/wishes.jsp");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response){
+
+        if (!request.getParameter("operation").equals("create")) {
+            return;
+        }
 
         // Get info from Form
         String username = request.getParameter("username");
@@ -61,17 +75,16 @@ public class ServletDatabase extends HttpServlet {
         String content = request.getParameter("content");
 
         // Save on Database
-
         Wish newWish = new Wish(username, title, content);
         this.repository.create(newWish);
 
         // Redirect response to JSP
-        request.setAttribute("operationType", OperationResult.CREATED);
-        request.setAttribute("operationMessage", "Your wish was " + OperationResult.CREATED + " correctly!");
+        HttpSession session = request.getSession();
+        session.setAttribute("operationType", OperationResult.CREATED);
+        session.setAttribute("operationMessage", "Your wish was " + OperationResult.CREATED + " correctly!");
         try {
-            request.getRequestDispatcher("requestResult.jsp").forward(request, response);
-        } catch (ServletException e) {
-            throw new RuntimeException(e);
+            //request.getRequestDispatcher("/requestResult.jsp").forward(request, response);
+            response.sendRedirect("/requestResult.jsp");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
