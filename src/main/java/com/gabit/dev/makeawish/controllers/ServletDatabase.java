@@ -3,8 +3,8 @@ package com.gabit.dev.makeawish.controllers;
 import com.gabit.dev.makeawish.models.OperationResult;
 import com.gabit.dev.makeawish.models.Wish;
 import com.gabit.dev.makeawish.models.WishRepository;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
+import javax.servlet.http.*;
+import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
